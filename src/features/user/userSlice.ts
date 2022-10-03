@@ -3,11 +3,12 @@ import { User, UserState } from "../../models/states/UserState";
 import customFetch from "../../utils/customFetch";
 import { toast } from "react-toastify";
 import { RegisterState } from "../../pages/Register";
-import { addUserToLocalStorage, getUserFromLocalStorage } from "../../utils/localStorage";
+import { addUserToLocalStorage, getUserFromLocalStorage, removeUserFromLocalStorage } from "../../utils/localStorage";
 
 const initialState: UserState = {
 	user: getUserFromLocalStorage(),
 	isLoading: false,
+	isSidebarOpen: false,
 };
 
 export const registerUser = createAsyncThunk(
@@ -40,6 +41,14 @@ const userSlice = createSlice({
 	name: 'user',
 	initialState,
 	reducers: {
+		logoutUser: (state) => {
+			state.user = null;
+			state.isSidebarOpen = false;
+			removeUserFromLocalStorage();
+		},
+		toggleSidebar: (state) => {
+			state.isSidebarOpen = !state.isSidebarOpen;
+		},
 
 	},
 	extraReducers: (builder) => {
@@ -74,4 +83,5 @@ const userSlice = createSlice({
 	}
 });
 
+export const { toggleSidebar, logoutUser } = userSlice.actions;
 export default userSlice.reducer;

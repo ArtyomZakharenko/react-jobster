@@ -1,6 +1,7 @@
 export interface UserState {
 	user: User | null;
 	isLoading: boolean;
+	isSidebarOpen: boolean;
 }
 
 export interface User {

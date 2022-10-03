@@ -48,9 +48,11 @@ function Register() {
 	}
 
 	useEffect(() => {
-		setTimeout(() => {
-			navigate('/');
-		}, 3000);
+		if (user) {
+			setTimeout(() => {
+				navigate('/');
+			}, 2000);
+		}
 	}, [user, navigate]);
 
 	return (
