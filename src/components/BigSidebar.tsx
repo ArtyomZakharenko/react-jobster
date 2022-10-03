@@ -1,17 +1,11 @@
 import NavLinks from './NavLinks';
 import Logo from '../components/Logo';
 import Wrapper from '../assets/wrappers/BigSidebar';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { toggleSidebar } from "../features/user/userSlice";
 
 function BigSidebar() {
 	const { isSidebarOpen } = useSelector((store: RootState) => store.user);
-	const dispatch = useDispatch();
-
-	const toggle = () => {
-		dispatch(toggleSidebar());
-	};
 
 	return (
 		<Wrapper>
@@ -26,7 +20,7 @@ function BigSidebar() {
 					<header>
 						<Logo />
 					</header>
-					<NavLinks toggleSidebar={toggle}/>
+					<NavLinks toggleSidebar={undefined}/>
 				</div>
 			</div>
 		</Wrapper>
