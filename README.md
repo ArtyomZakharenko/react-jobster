@@ -4,7 +4,7 @@ Users can save jobs to their profile and view their saved jobs.
 
 ## Live Demo
 
-[Jobster App]()
+[Jobster App](https://jobster-025385.netlify.app)
 
 ## Features
 
