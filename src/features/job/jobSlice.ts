@@ -1,10 +1,8 @@
 import { createSlice, createAsyncThunk, Draft } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import customFetch from '../../utils/customFetch';
-import { Job, JobState } from "../../models/states/JobState";
-import { logoutUser } from "../user/userSlice";
+import { JobState } from "../../models/states/JobState";
 import { getUserFromLocalStorage } from "../../utils/localStorage";
-import { getAllJobs, hideLoading, showLoading } from "../AllJobs/allJobsSlice";
+import { createJobThunk, deleteJobThunk, editJobThunk } from "./jobThunk";
 
 const initialState: JobState = {
 	company: '',
@@ -19,63 +17,9 @@ const initialState: JobState = {
 	jobTypeOptions: ['full-time', 'part-time', 'remote', 'internship'],
 };
 
-export const createJob = createAsyncThunk(
-	'job/createJob',
-	async (job: Job, thunkAPI: any) => {
-		try {
-			const resp = await customFetch.post('/jobs', job, {
-				headers: {
-					authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
-				},
-			});
-			thunkAPI.dispatch(clearValues());
-			return resp.data;
-		} catch (error: any) {
-			if (error.response.status === 401) {
-				thunkAPI.dispatch(logoutUser(null));
-				return thunkAPI.rejectWithValue('Unauthorized! Logging Out...');
-			}
-			return thunkAPI.rejectWithValue(error.response.data.msg);
-		}
-	}
-);
-
-export const editJob = createAsyncThunk(
-	'job/editJob',
-	async ({ jobId, job }: {jobId: string, job: Job}, thunkAPI: any) => {
-		try {
-			const resp = await customFetch.patch(`/jobs/${jobId}`, job, {
-				headers: {
-					authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
-				},
-			});
-			thunkAPI.dispatch(clearValues());
-			return resp.data;
-		} catch (error: any) {
-			return thunkAPI.rejectWithValue(error.response.data.msg);
-		}
-	}
-);
-
-export const deleteJob = createAsyncThunk(
-	'job/deleteJob',
-	async (jobId: string, thunkAPI:any) => {
-		thunkAPI.dispatch(showLoading());
-		try {
-			const resp = await customFetch.delete(`/jobs/${jobId}`, {
-				headers: {
-					authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
-				},
-			});
-			thunkAPI.dispatch(getAllJobs());
-			return resp.data;
-		} catch (error: any) {
-			thunkAPI.dispatch(hideLoading());
-			return thunkAPI.rejectWithValue(error.response.data.msg);
-		}
-	}
-);
-
+export const createJob = createAsyncThunk('job/createJob', createJobThunk);
+export const editJob = createAsyncThunk(	'job/editJob', editJobThunk);
+export const deleteJob = createAsyncThunk('job/deleteJob', deleteJobThunk);
 
 const jobSlice = createSlice({
 	name: 'job',
