@@ -1,6 +1,12 @@
+import { JobsContainer, SearchContainer } from "../../components";
+
 function AllJobs() {
 	return (
-		<h2>AddJobs</h2>
+		<>
+			<SearchContainer />
+			<JobsContainer />
+		</>
 	);
 }
+
 export default AllJobs;

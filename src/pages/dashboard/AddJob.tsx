@@ -1,11 +1,10 @@
-import { FormRow } from '../../components';
+import { FormRow, FormRowSelect } from '../../components';
 import Wrapper from '../../assets/wrappers/DashboardFormPage';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { AppDispatch, RootState } from "../../store";
 import { ChangeEvent, MouseEvent, useEffect } from "react";
-import FormRowSelect from "../../components/FormRowSelect";
-import { handleChange, clearValues, createJob } from "../../features/job/jobSlice";
+import { handleChange, clearValues, createJob, editJob } from "../../features/job/jobSlice";
 import { Job } from "../../models/states/JobState";
 
 function AddJob() {
@@ -14,22 +13,32 @@ function AddJob() {
 		isLoading,
 		position,
 		company,
-		location,
-		type,
-		typeOptions,
+		jobLocation,
+		jobType,
+		jobTypeOptions,
 		status,
 		statusOptions,
 		isEditing,
+		editJobId,
 	} = useSelector((store: RootState) => store.job);
 	const dispatch = useDispatch<AppDispatch>();
 
 	const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
-		if (!position || !company || !location) {
+		if (!position || !company || !jobLocation) {
 			toast.error('Please fill out all fields');
 			return;
 		}
-		dispatch(createJob({ position, company, location, type, status } as Job));
+		if (isEditing) {
+			dispatch(
+				editJob({
+					jobId: editJobId,
+					job: { position, company, jobLocation, jobType, status },
+				})
+			);
+			return;
+		}
+		dispatch(createJob({ position, company, jobLocation, jobType, status } as Job));
 	};
 	const handleJobInput = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 		const name = e.target.name;
@@ -39,7 +48,7 @@ function AddJob() {
 
 	useEffect(() => {
 		if (!isEditing) {
-			dispatch(handleChange({ name: 'location', value: user.location }));
+			dispatch(handleChange({ name: 'jobLocation', value: user.location }));
 		}
 	}, []);
 
@@ -63,30 +72,29 @@ function AddJob() {
 						value={company}
 						handleChange={handleJobInput}
 					/>
-					{/* location */}
+					{/* jobLocation */}
 					<FormRow
 						type='text'
+						name='jobLocation'
 						labelText='job location'
-						name='location'
-						value={location}
+						value={jobLocation}
 						handleChange={handleJobInput}
 					/>
-					{/* job status */}
+					{/* status */}
 					<FormRowSelect
 						name='status'
 						value={status}
 						handleChange={handleJobInput}
 						list={statusOptions}
 					/>
-					{/* job type */}
+					{/* job type*/}
 					<FormRowSelect
-						name='type'
+						name='jobType'
 						labelText='job type'
-						value={type}
+						value={jobType}
 						handleChange={handleJobInput}
-						list={typeOptions}
+						list={jobTypeOptions}
 					/>
-					{/* btn container */}
 					<div className='btn-container'>
 						<button
 							type='button'

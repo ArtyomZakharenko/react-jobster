@@ -1,17 +1,17 @@
 export interface Job {
 	position: string;
 	company: string;
-	location: string;
-	type: string;
+	jobLocation: string;
+	jobType: string;
 	status: string;
 }
 
 export interface JobState extends Job {
 	isLoading: boolean;
-	typeOptions: string[];
+	jobTypeOptions: string[];
 	statusOptions: string[];
 	isEditing: boolean;
-	editId: string;
+	editJobId: string;
 }
 
 
