@@ -12,7 +12,7 @@ const initialState: JobState = {
 	jobLocation: '',
 	position: '',
 	status: 'pending',
-	statusOptions: ['interview', 'declined', 'pending', 'offer'],
+	statusOptions: ['interview', 'declined', 'pending'],
 	jobType: 'full-time',
 	jobTypeOptions: ['full-time', 'part-time', 'remote', 'internship'],
 };
@@ -62,6 +62,12 @@ const jobSlice = createSlice({
 		builder.addCase(editJob.rejected, (state, action) => {
 			state.isLoading = false;
 			toast.error(action.payload as string);
+		});
+		builder.addCase(deleteJob.fulfilled, (state,{ payload }) => {
+			toast.success(payload);
+		});
+		builder.addCase(deleteJob.rejected, (state, { payload }) => {
+			toast.error(payload as string);
 		});
 	}
 });

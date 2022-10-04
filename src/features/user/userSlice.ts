@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { loginUserThunk, registerUserThunk, updateUserThunk, } from './userThunk';
+import { clearStoreThunk, loginUserThunk, registerUserThunk, updateUserThunk, } from './userThunk';
 import { User, UserState } from "../../models/states/UserState";
 import { toast } from "react-toastify";
 import { RegisterState } from "../../pages/Register";
@@ -30,6 +30,8 @@ export const updateUser = createAsyncThunk(
 	'user/updateUser',
 	async (user: User, thunkAPI) => updateUserThunk('/auth/updateUser', user, thunkAPI)
 );
+
+export const clearStore = createAsyncThunk('user/clearStore', clearStoreThunk);
 
 const userSlice = createSlice({
 	name: 'user',
@@ -88,6 +90,9 @@ const userSlice = createSlice({
 		builder.addCase(updateUser.rejected, (state, action) => {
 			state.isLoading = false;
 			toast.error(action.payload as string);
+		});
+		builder.addCase(clearStore.rejected, ()  => {
+			toast.error('There was an error..');
 		});
 	}
 });

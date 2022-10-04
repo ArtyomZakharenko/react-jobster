@@ -14,8 +14,8 @@ export interface AllJobState extends FilterState {
 	totalJobs: number;
 	numOfPages: number;
 	page: number;
-	stats: any;
-	monthlyApplications: any[];
+	stats: Stats;
+	monthlyApplications: Application[];
 }
 
 export interface JobItem extends Job {
@@ -23,5 +23,17 @@ export interface JobItem extends Job {
 	createdAt: string;
 	createBy: string;
 	updateAt: string;
+}
+
+export interface Stats {
+	interview: number;
+	declined: number;
+	pending: number;
+	offer: number;
+}
+
+export interface Application {
+	date: string;
+	count: number;
 }
 

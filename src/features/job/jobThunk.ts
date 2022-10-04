@@ -1,4 +1,4 @@
-import customFetch from '../../utils/customFetch';
+import customFetch, { checkForUnauthorizedResponse } from '../../utils/customFetch';
 import { getAllJobs, hideLoading, showLoading } from "../AllJobs/allJobsSlice";
 import { clearValues } from './jobSlice';
 import { Job } from "../../models/states/JobState";
@@ -9,7 +9,7 @@ export const createJobThunk = async (job: Job, thunkAPI: any) => {
 		thunkAPI.dispatch(clearValues());
 		return resp.data;
 	} catch (error: any) {
-		return thunkAPI.rejectWithValue(error.response.data.msg);
+		return checkForUnauthorizedResponse(error, thunkAPI);
 	}
 };
 
@@ -17,11 +17,11 @@ export const deleteJobThunk = async (jobId: string, thunkAPI: any) => {
 	thunkAPI.dispatch(showLoading());
 	try {
 		const resp = await customFetch.delete(`/jobs/${jobId}`);
-		thunkAPI.dispatch(getAllJobs());
+		thunkAPI.dispatch(getAllJobs(undefined));
 		return resp.data;
 	} catch (error: any) {
 		thunkAPI.dispatch(hideLoading());
-		return thunkAPI.rejectWithValue(error.response.data.msg);
+		return checkForUnauthorizedResponse(error, thunkAPI);
 	}
 };
 
@@ -31,6 +31,6 @@ export const editJobThunk = async ({ jobId, job }: {jobId: string, job: Job}, th
 		thunkAPI.dispatch(clearValues());
 		return resp.data;
 	} catch (error: any) {
-		return thunkAPI.rejectWithValue(error.response.data.msg);
+		return checkForUnauthorizedResponse(error, thunkAPI);
 	}
 };

@@ -1,7 +1,9 @@
-import customFetch from '../../utils/customFetch';
+import customFetch, { checkForUnauthorizedResponse } from '../../utils/customFetch';
 import { logoutUser } from './userSlice';
 import { User } from "../../models/states/UserState";
 import { RegisterState } from "../../pages/Register";
+import { clearValues } from "../job/jobSlice";
+import { clearAllJobsState } from "../AllJobs/allJobsSlice";
 
 export const registerUserThunk = async (url: string, user: RegisterState, thunkAPI: any) => {
 	try {
@@ -26,10 +28,17 @@ export const updateUserThunk = async (url: string, user: User, thunkAPI: any) =>
 		const resp = await customFetch.patch(url, user);
 		return resp.data;
 	} catch (error: any) {
-		if (error.response.status === 401) {
-			thunkAPI.dispatch(logoutUser(null));
-			return thunkAPI.rejectWithValue('Unauthorized access. Logging out...');
-		}
-		return thunkAPI.rejectWithValue(error.response.data.msg);
+		return checkForUnauthorizedResponse(error, thunkAPI);
+	}
+};
+
+export const clearStoreThunk = async (message: string, thunkAPI: any) => {
+	try {
+		thunkAPI.dispatch(logoutUser(message));
+		thunkAPI.dispatch(clearAllJobsState());
+		thunkAPI.dispatch(clearValues());
+		return Promise.resolve();
+	} catch (error) {
+		return Promise.reject();
 	}
 };
