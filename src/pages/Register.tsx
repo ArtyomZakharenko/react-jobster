@@ -92,11 +92,26 @@ function Register() {
 				>
 					{isLoading ? 'Loading...' : 'Submit'}
 				</button>
+				<button
+					type='button'
+					className='btn btn-block btn-hipster'
+					disabled={isLoading}
+					onClick={() => {
+						dispatch(loginUser({ email: 'testUser@test.com', password: 'secret' } as RegisterState));
+					}}
+				>
+					{isLoading ? 'loading...' : 'demo'}
+				</button>
 				<p>
 					{values.isMember ? 'Need to register?' : 'Already a member?'}
-					<button type='button' onClick={toggleMember} className='member-btn'>
+					<button
+						type='button'
+						onClick={toggleMember}
+						className='member-btn'
+					>
 						{values.isMember ? 'Register' : 'Login'}
 					</button>
+
 				</p>
 			</form>
 		</Wrapper>
