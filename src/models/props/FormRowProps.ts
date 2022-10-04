@@ -8,3 +8,12 @@ export interface FormRowProps {
 	handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
+export interface FormRowSelectProps {
+	labelText?: string;
+	name: string;
+	value: string;
+	handleChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+	list: string[];
+}
+
+
